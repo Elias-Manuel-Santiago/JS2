@@ -1,0 +1,42 @@
+<div class="panel">
+  <h1>Modificar archivo de números</h1>
+
+  <p id="modify-validation" class="error-msg" aria-live="polite"></p>
+
+  <!-- Zona de carga — visible hasta que se carga un archivo -->
+  <div id="modify-drop-zone" class="drop-zone">
+    <p>Arrastrá y soltá un archivo <strong>.txt</strong> acá</p>
+    <p class="min-hint">— o —</p>
+    <button id="modify-browse-btn" class="btn" type="button">Explorar archivo…</button>
+    <input  type="file" id="modify-file-input" accept=".txt" hidden>
+    <p class="hint">También podés hacer clic en <strong>Modificar</strong> en algún archivo de la lista de la derecha.</p>
+  </div>
+
+  <!-- Editor — visible después de cargar un archivo correctamente -->
+  <div id="modify-editor" hidden>
+    <div class="filename-row">
+      <label for="modify-filename">Guardar como:</label>
+      <input type="text" id="modify-filename" placeholder="nombre.txt">
+    </div>
+    <p class="count">
+      Números: <strong><span id="modify-count">0</span> / 20</strong>
+      <span class="min-hint">&nbsp;(10 – 20)</span>
+    </p>
+
+    <ul id="modify-list" class="number-list" aria-label="Lista de números"></ul>
+
+    <div class="input-row">
+      <input type="text" id="modify-new-number" placeholder="Agregar un número"
+             step="any" autocomplete="off">
+      <button id="modify-add-btn" class="btn" type="button">Agregar</button>
+    </div>
+
+    <p id="modify-error" class="error-msg" aria-live="polite"></p>
+
+    <div class="action-row">
+      <button id="modify-download-btn" class="btn"               type="button">Descargar .txt</button>
+      <button id="modify-upload-btn"   class="btn btn-primary"   type="button">Subir al servidor</button>
+      <button id="modify-reset-btn"    class="btn btn-secondary" type="button">Cargar otro archivo</button>
+    </div>
+  </div>
+</div>

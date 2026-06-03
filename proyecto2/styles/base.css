@@ -1,0 +1,87 @@
+/* Variables de color y tipografía — modo claro y oscuro */
+
+:root {
+  --bg:              #f0f3f7;
+  --surface:         #f6f8fa;
+  --surface-hover:   #edf0f4;
+  --text:            #0f172a;
+  --text-muted:      #64748b;
+  --border:          #dde2ea;
+  --primary:         #2563eb;
+  --primary-hover:   #1d4ed8;
+  --primary-light:   #e8f0fd;
+  --danger:          #dc2626;
+  --danger-hover:    #b91c1c;
+  --secondary-bg:    #edf0f4;
+  --secondary-hover: #dde2ea;
+  --radius:          0.5rem;
+  --radius-sm:       0.3rem;
+  --shadow:          0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md:       0 4px 12px rgba(0, 0, 0, 0.1);
+  --transition:      0.2s ease;
+}
+
+body.dark {
+  --bg:              #0f172a;
+  --surface:         #1e293b;
+  --surface-hover:   #273549;
+  --text:            #f1f5f9;
+  --text-muted:      #94a3b8;
+  --border:          #334155;
+  --primary:         #3b82f6;
+  --primary-hover:   #2563eb;
+  --primary-light:   #1e3a5f;
+  --danger:          #ef4444;
+  --danger-hover:    #dc2626;
+  --secondary-bg:    #273549;
+  --secondary-hover: #334155;
+}
+
+/* ── Reset ───────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+  transition: background-color var(--transition), color var(--transition);
+}
+
+ul {
+  list-style: none;
+}
+
+/* ── Tipografía ──────────────────────────────────────────────── */
+
+h1 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+p {
+  color: var(--text);
+}
+
+strong {
+  font-weight: 600;
+}

@@ -1,0 +1,44 @@
+<div class="two-panels">
+
+  <!-- Panel izquierdo: crear números uno por uno -->
+  <div class="panel">
+    <h2>Crear números</h2>
+    <p class="hint">Agregá entre 10 y 20 números. Podés eliminar cualquiera antes de guardar.</p>
+    <div class="input-row">
+      <input type="text" id="create-number-input" placeholder="Ingresá un número" step="any" autocomplete="off">
+      <button id="create-add-btn" class="btn" type="button">Agregar</button>
+    </div>
+    <p id="create-error" class="error-msg" aria-live="polite"></p>
+    <p class="count">Números: <strong><span id="create-count">0</span> / 20</strong></p>
+    <ul id="create-list" class="number-list" aria-label="Números agregados"></ul>
+    <div class="filename-row">
+      <label for="create-filename">Guardar como:</label>
+      <input type="text" id="create-filename" placeholder="numeros.txt">
+    </div>
+    <div class="action-row">
+      <button id="create-download-btn" class="btn" type="button" disabled>Descargar .txt</button>
+      <button id="create-upload-btn" class="btn btn-primary" type="button" disabled>Subir al servidor</button>
+    </div>
+  </div>
+
+  <!-- Panel derecho: subir archivo .txt directamente -->
+  <div class="panel">
+    <h2>Subir archivo</h2>
+    <div id="upload-drop-zone" class="drop-zone">
+      <p>Arrastrá y soltá un archivo <strong>.txt</strong> acá</p>
+      <p class="min-hint">— o —</p>
+      <button id="upload-browse-btn" class="btn" type="button">Explorar archivo…</button>
+      <input type="file" id="upload-file-input" accept=".txt" hidden>
+      <p class="hint">El archivo debe tener entre 10 y 20 números, uno por línea.</p>
+    </div>
+    <p id="upload-validation" class="error-msg" aria-live="polite"></p>
+    <div class="filename-row">
+      <label for="upload-filename">Guardar como:</label>
+      <input type="text" id="upload-filename" placeholder="numeros.txt">
+    </div>
+    <div class="action-row">
+      <button id="upload-submit-btn" class="btn btn-primary" type="button" disabled>Subir al servidor</button>
+    </div>
+  </div>
+
+</div>

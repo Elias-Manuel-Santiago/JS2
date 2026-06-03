@@ -1,0 +1,87 @@
+/* Estructura de página — centrado al 80% y grid principal */
+
+/* ── Barra de acento superior (fija) ─────────────────────────── */
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary) 0%, #7c3aed 100%);
+  z-index: 100;
+}
+
+body {
+  padding-top: 3px;
+}
+
+/* ── Contenedor centrado ─────────────────────────────────────── */
+
+.topnav,
+.app-layout {
+  width: min(80%, 1400px);
+  margin-inline: auto;
+}
+
+/* ── Barra de navegación ─────────────────────────────────────── */
+
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--bg);
+  position: sticky;
+  top: 3px;
+  z-index: 10;
+  transition: background-color var(--transition), border-color var(--transition);
+}
+
+.brand {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-right: auto;
+  letter-spacing: -0.01em;
+}
+
+/* ── Grid principal: contenido + barra lateral ───────────────── */
+
+.app-layout {
+  display: grid;
+  grid-template-columns: 1fr 0.4fr;
+  gap: 1.5rem;
+  padding-top: 1.5rem;
+  padding-bottom: 5rem;
+  align-items: start;
+}
+
+/* ── Vista Crear: dos paneles lado a lado dentro del main ─────── */
+
+.two-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .app-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .topnav,
+  .app-layout {
+    width: 92%;
+  }
+
+  .two-panels {
+    grid-template-columns: 1fr;
+  }
+}
