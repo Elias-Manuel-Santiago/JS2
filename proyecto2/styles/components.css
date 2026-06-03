@@ -404,6 +404,7 @@ input:disabled {
   border: 2px dashed var(--border);
   border-radius: var(--radius);
   padding: 2rem;
+  margin-bottom: 10px;
   text-align: center;
   background-color: var(--surface-hover);
 }
