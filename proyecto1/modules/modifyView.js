@@ -4,10 +4,11 @@ import { saveFile, fetchFileContent, deleteFile } from "/modules/api.js";
 import { downloadNumbers } from "/modules/download.js";
 import { validateContent, MIN_NUMBERS, MAX_NUMBERS } from "/modules/validator.js";
 
+// onSave: callback que el controlador usa para refrescar la lista lateral después de guardar
 export function initModifyView(onSave) {
     let numbers = [];
-    let currentFilename = null; // nombre por defecto al guardar
-    let serverFilename = null; // nombre del archivo en el servidor (null si vino del disco)
+    let currentFilename = null; // nombre que aparece en el input (puede haber sido editado por el usuario)
+    let serverFilename = null;  // nombre real del archivo en el servidor (null si vino del disco local)
 
     // ── Referencias al DOM ────────────────────────────────────────────────────
 
@@ -27,17 +28,21 @@ export function initModifyView(onSave) {
     const filenameInput = document.getElementById("modify-filename");
 
 
-    // ── Cargar desde el servidor (también expuesto externamente) ──────────────
+    // ── Cargar desde el servidor ──────────────────────────────────────────────
 
+    // Descarga el contenido del archivo, lo valida y abre el editor
     async function loadFromServer(filename) {
         validationMsg.textContent = "";
         try {
             const content = await fetchFileContent(filename);
             const result = validateContent(content);
-            if (!result.valid) { validationMsg.textContent = `Archivo inválido: ${result.error}`; return; }
+            if (!result.valid) {
+                validationMsg.textContent = `Archivo inválido: ${result.error}`;
+                return;
+            }
             numbers = result.numbers;
             currentFilename = filename;
-            serverFilename = filename;
+            serverFilename = filename; // registra que este archivo ya existe en el servidor
             abrirEditor(filename);
         } catch {
             validationMsg.textContent = "No se pudo cargar el archivo desde el servidor.";
@@ -47,7 +52,10 @@ export function initModifyView(onSave) {
     // ── Cargar desde un archivo local (drag & drop o explorador) ─────────────
 
     function cargarArchivoLocal(file) {
-        if (!file.name.endsWith(".txt")) { validationMsg.textContent = "Solo se aceptan archivos .txt."; return; }
+        if (!file.name.endsWith(".txt")) {
+            validationMsg.textContent = "Solo se aceptan archivos .txt.";
+            return;
+        }
 
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -55,7 +63,7 @@ export function initModifyView(onSave) {
             if (!result.valid) { validationMsg.textContent = `Formato inválido: ${result.error}`; return; }
             numbers = result.numbers;
             currentFilename = file.name;
-            serverFilename = null; // vino del disco, no hay original en el servidor
+            serverFilename = null; // vino del disco local: no existe en el servidor todavía
             validationMsg.textContent = "";
             abrirEditor(file.name);
         };
@@ -70,6 +78,7 @@ export function initModifyView(onSave) {
 
     // ── Abrir / cerrar editor ─────────────────────────────────────────────────
 
+    // Oculta el drop zone y muestra el panel de edición con los números cargados
     function abrirEditor(filename) {
         dropZone.hidden = true;
         editor.hidden = false;
@@ -77,6 +86,7 @@ export function initModifyView(onSave) {
         renderEditor();
     }
 
+    // Restablece todo el estado y vuelve a mostrar el drop zone
     function cerrarEditor() {
         numbers = [];
         currentFilename = null;
@@ -91,6 +101,7 @@ export function initModifyView(onSave) {
 
     // ── Renderizado del editor ────────────────────────────────────────────────
 
+    // Reconstruye la lista de inputs editables; se llama cada vez que cambia el array numbers
     function renderEditor() {
         numberList.innerHTML = "";
 
@@ -98,20 +109,20 @@ export function initModifyView(onSave) {
             const li = document.createElement("li");
             li.className = "number-item";
 
-            // Input editable en línea; se confirma al perder el foco
+            // Input editable en línea; se confirma al perder el foco (evento "change")
             const input = document.createElement("input");
             input.type = "number";
             input.value = n;
-            input.step = "any";
+            input.step = "any"; // permite decimales
             input.className = "number-edit-input";
             input.setAttribute("aria-label", `Número ${i + 1}`);
             input.addEventListener("change", () => {
                 const val = input.valueAsNumber;
                 if (isFinite(val) && !isNaN(val)) {
-                    numbers[i] = val;
+                    numbers[i] = val; // actualiza el array con el nuevo valor
                     errorMsg.textContent = "";
                 } else {
-                    numbers[i] = NaN;
+                    numbers[i] = NaN; // marca la posición como inválida; el botón guardar lo detectará
                 }
             });
 
@@ -120,7 +131,7 @@ export function initModifyView(onSave) {
             delBtn.className = "btn btn-small btn-danger";
             delBtn.textContent = "✕";
             delBtn.title = "Eliminar";
-            // No se puede bajar del mínimo
+            // Impide bajar del mínimo requerido
             delBtn.disabled = numbers.length <= MIN_NUMBERS;
             delBtn.addEventListener("click", () => {
                 numbers.splice(i, 1);
@@ -164,6 +175,7 @@ export function initModifyView(onSave) {
 
     downloadBtn.addEventListener("click", () => {
         if (numbers.length < MIN_NUMBERS) { errorMsg.textContent = `Necesitás al menos ${MIN_NUMBERS} números para descargar.`; return; }
+        // Prioriza el nombre del input; si está vacío usa el nombre original del archivo
         const filename = filenameInput.value.trim() ? normalizarNombre(filenameInput.value) : currentFilename || "modificado.txt";
         downloadNumbers(numbers, filename);
     });
@@ -173,6 +185,7 @@ export function initModifyView(onSave) {
     uploadBtn.addEventListener("click", async () => {
         if (numbers.length < MIN_NUMBERS) { errorMsg.textContent = `Necesitás al menos ${MIN_NUMBERS} números.`; return; }
         if (numbers.length > MAX_NUMBERS) { errorMsg.textContent = `El máximo es ${MAX_NUMBERS} números.`; return; }
+        // Detecta si algún input quedó con un valor inválido (NaN) después de edición manual
         if (!numbers.every((n) => typeof n === "number" && isFinite(n))) {
             errorMsg.textContent = "Hay números inválidos en la lista. Corregílos antes de guardar.";
             return;
@@ -187,12 +200,13 @@ export function initModifyView(onSave) {
         try {
             uploadBtn.disabled = true;
             uploadBtn.textContent = "Guardando…";
-            await saveFile(filename, numbers);
+            await saveFile(filename, numbers); // crea o sobreescribe con el nuevo nombre
+            // Si el usuario renombró el archivo, elimina el original del servidor para no dejar duplicados
             if (serverFilename && serverFilename !== filename) {
                 await deleteFile(serverFilename);
             }
             currentFilename = filename;
-            serverFilename = filename;
+            serverFilename = filename; // actualiza el nombre de referencia en el servidor
             await onSave();
             errorMsg.textContent = "";
             uploadBtn.textContent = "✓ Guardado!";
@@ -207,6 +221,7 @@ export function initModifyView(onSave) {
 
     // ── Reiniciar ─────────────────────────────────────────────────────────────
 
+    // Vuelve al estado inicial para cargar un archivo diferente
     resetBtn.addEventListener("click", cerrarEditor);
 
     // ── Drag & drop ───────────────────────────────────────────────────────────
@@ -228,6 +243,6 @@ export function initModifyView(onSave) {
         if (file) cargarArchivoLocal(file);
     });
 
-    // Expone loadFromServer para que el controlador pueda invocarlo desde la barra lateral
+    // Expone loadFromServer para que el controlador pueda invocarla desde la barra lateral
     return { loadFromServer };
 }
