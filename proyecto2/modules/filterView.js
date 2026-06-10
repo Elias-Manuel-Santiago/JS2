@@ -5,7 +5,7 @@ import { downloadNumbers } from "/modules/download.js";
 
 // ── Lógica de filtrado ─────────────────────────────────────────────────────────
 
-function hasMatchingFirstLastDigit(num) {
+function pseudoCapicua(num) {
     const digits = String(num).replace(/[^0-9]/g, "");
     if (digits.length === 0) return false;
     return digits[0] === digits[digits.length - 1];
@@ -69,8 +69,8 @@ export function initFilterView() {
     function processAndDisplay(numbers, filename) {
         currentNumbers = numbers;
 
-        const useful    = numbers.filter(hasMatchingFirstLastDigit).sort((a, b) => a - b);
-        const notUseful = numbers.filter((n) => !hasMatchingFirstLastDigit(n));
+        const useful    = numbers.filter(pseudoCapicua).sort((a, b) => a - b);
+        const notUseful = numbers.filter((n) => !pseudoCapicua(n));
         const percentage =
             numbers.length > 0
                 ? ((useful.length / numbers.length) * 100).toFixed(1)
@@ -188,7 +188,7 @@ export function initFilterView() {
 
     downloadBtn.addEventListener("click", () => {
         const useful = currentNumbers
-            .filter(hasMatchingFirstLastDigit)
+            .filter(pseudoCapicua)
             .sort((a, b) => a - b);
 
         const raw      = filenameInput.value.trim() || "filtrado.txt";

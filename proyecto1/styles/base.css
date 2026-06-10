@@ -1,19 +1,19 @@
 /* Variables de color y tipografía — modo claro y oscuro */
 
 :root {
-  --bg:              #f0f3f7;
-  --surface:         #f6f8fa;
-  --surface-hover:   #edf0f4;
-  --text:            #0f172a;
+  --bg:              #e5eaf2;
+  --surface:         #eceff6;
+  --surface-hover:   #dfe4ed;
+  --text:            #1e293b;
   --text-muted:      #64748b;
-  --border:          #dde2ea;
-  --primary:         #2563eb;
-  --primary-hover:   #1d4ed8;
-  --primary-light:   #e8f0fd;
+  --border:          #c8d1dc;
+  --primary:         #1e52c8;
+  --primary-hover:   #1841a8;
+  --primary-light:   #d8e4f8;
   --danger:          #dc2626;
   --danger-hover:    #b91c1c;
-  --secondary-bg:    #edf0f4;
-  --secondary-hover: #dde2ea;
+  --secondary-bg:    #dfe4ed;
+  --secondary-hover: #c8d1dc;
   --radius:          0.5rem;
   --radius-sm:       0.3rem;
   --shadow:          0 1px 3px rgba(0, 0, 0, 0.08);

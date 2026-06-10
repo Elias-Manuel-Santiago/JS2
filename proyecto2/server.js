@@ -17,7 +17,6 @@ app.use(express.static("pages"));
 app.use("/scripts", express.static("scripts"));
 app.use("/styles", express.static("styles"));
 app.use("/modules", express.static("modules"));
-app.use("/views", express.static("views"));
 
 // ── Páginas ────────────────────────────────────────────────────────────────────
 
